@@ -128,6 +128,25 @@ module Boxr
       file_info.entries[0]
     end
 
+    def upload_file_stream(file_stream, parent, name: nil, content_created_at: nil, content_modified_at: nil,
+                    preflight_check: true, send_content_md5: true)
+
+      parent_id = ensure_id(parent)
+
+      filename = test
+      content_md5 = send_content_md5 ? Digest::SHA1.file(file_stream).hexdigest : nil
+
+      attributes = {name: filename, parent: {id: parent_id}}
+      attributes[:content_created_at] = content_created_at.to_datetime.rfc3339 unless content_created_at.nil?
+      attributes[:content_modified_at] = content_modified_at.to_datetime.rfc3339 unless content_modified_at.nil?
+
+      body = {attributes: JSON.dump(attributes), file: file_stream}
+
+      file_info, response = post(FILES_UPLOAD_URI, body, process_body: false, content_md5: content_md5)
+
+      file_info.entries[0]
+    end
+
     def upload_new_version_of_file(path_to_file, file, content_modified_at: nil, send_content_md5: true,
                                     preflight_check: true, if_match: nil)
       file_id = ensure_id(file)
