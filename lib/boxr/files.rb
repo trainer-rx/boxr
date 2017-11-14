@@ -133,7 +133,7 @@ module Boxr
 
       parent_id = ensure_id(parent)
 
-      filename = test
+      filename = 'test.pdf'
       content_md5 = send_content_md5 ? Digest::SHA1.file(file_stream).hexdigest : nil
 
       attributes = {name: filename, parent: {id: parent_id}}
