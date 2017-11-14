@@ -128,15 +128,14 @@ module Boxr
       file_info.entries[0]
     end
 
-    def upload_file_stream(file_stream, parent, name: nil, content_created_at: nil, content_modified_at: nil,
+    def upload_file_stream(file_stream, parent, name, content_created_at: nil, content_modified_at: nil,
                     preflight_check: true, send_content_md5: true)
 
       parent_id = ensure_id(parent)
 
-      filename = 'test.pdf'
       content_md5 = send_content_md5 ? Digest::SHA1.file(file_stream).hexdigest : nil
 
-      attributes = {name: filename, parent: {id: parent_id}}
+      attributes = {name: name, parent: {id: parent_id}}
       attributes[:content_created_at] = content_created_at.to_datetime.rfc3339 unless content_created_at.nil?
       attributes[:content_modified_at] = content_modified_at.to_datetime.rfc3339 unless content_modified_at.nil?
 
