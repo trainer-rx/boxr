@@ -133,7 +133,7 @@ module Boxr
 
       parent_id = ensure_id(parent)
 
-      content_md5 = send_content_md5 ? Digest::SHA1.file(file_stream).hexdigest : nil
+      content_md5 = send_content_md5 ? Digest::SHA1.file(file_stream.read).hexdigest : nil
 
       attributes = {name: name, parent: {id: parent_id}}
       attributes[:content_created_at] = content_created_at.to_datetime.rfc3339 unless content_created_at.nil?
