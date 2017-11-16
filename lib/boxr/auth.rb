@@ -84,7 +84,6 @@ module Boxr
     res = BOX_CLIENT.post(uri, body: body)
 
     if(res.status==200)
-      binding.pry
       body_json = JSON.load(res.body)
       return BoxrMash.new(body_json)
     else
