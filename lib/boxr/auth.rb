@@ -56,7 +56,7 @@ module Boxr
   end
 
   def self.exchange_token(subject_token, scopes:, file: nil)
-    resource_url = ( file.present? ) ? "#{Boxr::Client::FILES_URI}/#{file}" : nil
+    resource_url = ( file.present? ) ? "#{Boxr::Client::FOLDERS_URI}/#{file}" : nil
     uri = "https://api.box.com/oauth2/token"
      params = {
       subject_token: subject_token,
