@@ -1,6 +1,8 @@
 module Boxr
 
   JWT_GRANT_TYPE="urn:ietf:params:oauth:grant-type:jwt-bearer"
+  TOKEN_EXCHANGE_TOKEN_TYPE="urn:ietf:params:oauth:token-type:access_token"
+  TOKEN_EXCHANGE_GRANT_TYPE="urn:ietf:params:oauth:grant-type:token-exchange"
 
   def self.oauth_url(state, host: "app.box.com", response_type: "code", scope: nil, folder_id: nil, client_id: ENV['BOX_CLIENT_ID'])
     template = Addressable::Template.new("https://{host}/api/oauth2/authorize{?query*}")
@@ -51,6 +53,19 @@ module Boxr
     body = "client_id=#{client_id}&client_secret=#{client_secret}&token=#{token}"
 
     auth_post(uri, body)
+  end
+
+  def self.exchange_token(subject_token, scopes:, file: nil)
+    resource_url = ( file.present? ) ? "#{Boxr::Client::FILES_URI}/#{file}" : nil
+    uri = "https://api.box.com/oauth2/token"
+     params = {
+      subject_token: subject_token,
+      subject_token_type: TOKEN_EXCHANGE_TOKEN_TYPE,
+      scope: scopes.join(' '),
+      grant_type: TOKEN_EXCHANGE_GRANT_TYPE
+    }
+     params[:resource] = resource_url unless resource_url.nil?
+     auth_post(uri, params.to_query)
   end
 
   class << self
